@@ -3,6 +3,9 @@ import cors from "cors";
 import { createClient } from 'redis';
 import dotenv from "dotenv";
 import amqplib from "amqplib";
+import express from "express";
+
+const port = process.env.PORT || 3002;
 
 dotenv.config();
 
@@ -77,4 +80,27 @@ await channel.consume(Queue, async (msg) => {
   }
 }, { noAck: false });           
 
+
+client.on('error', err => console.log('Redis Client Error', err));
+
+const app = express();
+const PORT = process.env.PORT || 3004;
+
+app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.json({ message: "Server is running" });
+});
+
+app.get("/health", (req, res) => {
+  res.json({ status: "ok", uptime: process.uptime() });
+});
+
+
+
+
+
+app.listen(PORT, async() => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
 
