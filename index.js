@@ -87,6 +87,7 @@ const app = express();
 const PORT = process.env.PORT || 3004;
 
 app.use(express.json());
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.json({ message: "Server is running" });
